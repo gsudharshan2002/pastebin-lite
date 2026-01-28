@@ -4,23 +4,7 @@ import { redis } from "@/lib/redis";
 import { nowMs } from "@/lib/time";
 
 export async function POST(req: Request) {
-<<<<<<< HEAD
   let body: { content: string; ttl_seconds?: number; max_views?: number };
-
-
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json(
-      { error: "Invalid JSON body" },
-      { status: 400 }
-    );
-  }
-
-  try {
-=======
-  let body: any;
->>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
 
   /* -----------------------------------
      1️⃣ Parse JSON safely
@@ -40,11 +24,7 @@ export async function POST(req: Request) {
     ----------------------------------- */
     const { content, ttl_seconds, max_views } = body;
 
-<<<<<<< HEAD
     if (typeof content !== "string" || !content.trim()) {
-=======
-    if (typeof content !== "string" || content.trim() === "") {
->>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
       return NextResponse.json(
         { error: "content is required" },
         { status: 400 }
@@ -71,13 +51,9 @@ export async function POST(req: Request) {
       );
     }
 
-<<<<<<< HEAD
-   
-=======
     /* -----------------------------------
        3️⃣ Create paste object
     ----------------------------------- */
->>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
     const id = nanoid(8);
     const now = nowMs(req);
 
@@ -94,19 +70,17 @@ export async function POST(req: Request) {
     ----------------------------------- */
     await redis.set(`paste:${id}`, paste);
 
-<<<<<<< HEAD
-   
-    const baseUrl = new URL(req.url).origin;
-=======
     /* -----------------------------------
-       5️⃣ Build URL (IMPORTANT)
+       5️⃣ Base URL from ENV (✅ correct way)
     ----------------------------------- */
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
     if (!baseUrl) {
-      throw new Error("NEXT_PUBLIC_BASE_URL not set");
+      return NextResponse.json(
+        { error: "NEXT_PUBLIC_BASE_URL not configured" },
+        { status: 500 }
+      );
     }
->>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
 
     return NextResponse.json(
       {
@@ -117,10 +91,10 @@ export async function POST(req: Request) {
     );
   } catch (err) {
     console.error("POST /api/pastes ERROR:", err);
-
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
