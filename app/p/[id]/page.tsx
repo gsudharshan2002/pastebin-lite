@@ -12,7 +12,7 @@ export default async function PastePage({
     { cache: "no-store" }
   );
 
-  // ❗ Handle error responses
+
   if (!res.ok) {
     let message = "Paste not available";
 
@@ -33,7 +33,7 @@ export default async function PastePage({
     );
   }
 
-  // ✅ Success case
+
   const data = await res.json();
 
   return (
