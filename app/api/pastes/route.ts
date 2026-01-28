@@ -4,13 +4,23 @@ import { redis } from "@/lib/redis";
 import { nowMs } from "@/lib/time";
 
 export async function POST(req: Request) {
+  let body: { content: string; ttl_seconds?: number; max_views?: number };
+
+
   try {
-    const body = await req.json();
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400 }
+    );
+  }
+
+  try {
 
     const { content, ttl_seconds, max_views } = body;
 
-    // Validation
-    if (typeof content !== "string" || content.trim() === "") {
+    if (typeof content !== "string" || !content.trim()) {
       return NextResponse.json(
         { error: "content is required" },
         { status: 400 }
@@ -37,24 +47,22 @@ export async function POST(req: Request) {
       );
     }
 
+   
     const id = nanoid(8);
     const now = nowMs(req);
-
-    const expires_at =
-      ttl_seconds ? now + ttl_seconds * 1000 : null;
 
     const paste = {
       content,
       created_at: now,
-      expires_at,
+      expires_at: ttl_seconds ? now + ttl_seconds * 1000 : null,
       max_views: max_views ?? null,
       views: 0,
     };
 
     await redis.set(`paste:${id}`, paste);
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL || "";
+   
+    const baseUrl = new URL(req.url).origin;
 
     return NextResponse.json(
       {
@@ -63,10 +71,12 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch {
+  } catch (err) {
+    console.error("POST /api/pastes ERROR:", err);
+
     return NextResponse.json(
-      { error: "Invalid JSON body" },
-      { status: 400 }
+      { error: "Internal server error" },
+      { status: 500 }
     );
   }
 }

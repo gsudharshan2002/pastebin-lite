@@ -6,9 +6,9 @@ export default async function PastePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/pastes/${id}`,
+    `${baseUrl}/api/pastes/${id}`,
     { cache: "no-store" }
   );
 
