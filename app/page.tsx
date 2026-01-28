@@ -29,7 +29,7 @@ export default function Home() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError( "Failed to create paste");
+      setError( data.error ||"Failed to create paste");
       return;
     }
 
