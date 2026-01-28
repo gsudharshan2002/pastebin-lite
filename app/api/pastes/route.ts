@@ -4,6 +4,7 @@ import { redis } from "@/lib/redis";
 import { nowMs } from "@/lib/time";
 
 export async function POST(req: Request) {
+<<<<<<< HEAD
   let body: { content: string; ttl_seconds?: number; max_views?: number };
 
 
@@ -17,10 +18,33 @@ export async function POST(req: Request) {
   }
 
   try {
+=======
+  let body: any;
+>>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
 
+  /* -----------------------------------
+     1️⃣ Parse JSON safely
+  ----------------------------------- */
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    /* -----------------------------------
+       2️⃣ Extract & validate input
+    ----------------------------------- */
     const { content, ttl_seconds, max_views } = body;
 
+<<<<<<< HEAD
     if (typeof content !== "string" || !content.trim()) {
+=======
+    if (typeof content !== "string" || content.trim() === "") {
+>>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
       return NextResponse.json(
         { error: "content is required" },
         { status: 400 }
@@ -47,7 +71,13 @@ export async function POST(req: Request) {
       );
     }
 
+<<<<<<< HEAD
    
+=======
+    /* -----------------------------------
+       3️⃣ Create paste object
+    ----------------------------------- */
+>>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
     const id = nanoid(8);
     const now = nowMs(req);
 
@@ -59,10 +89,24 @@ export async function POST(req: Request) {
       views: 0,
     };
 
+    /* -----------------------------------
+       4️⃣ Save to Redis
+    ----------------------------------- */
     await redis.set(`paste:${id}`, paste);
 
+<<<<<<< HEAD
    
     const baseUrl = new URL(req.url).origin;
+=======
+    /* -----------------------------------
+       5️⃣ Build URL (IMPORTANT)
+    ----------------------------------- */
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+    if (!baseUrl) {
+      throw new Error("NEXT_PUBLIC_BASE_URL not set");
+    }
+>>>>>>> a72ac539f2ae8a9fc810b3ac52116f635bc6f653
 
     return NextResponse.json(
       {
