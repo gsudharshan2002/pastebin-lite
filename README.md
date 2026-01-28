@@ -1,6 +1,5 @@
 **Here’s the exact code you can paste into your `README.md` file in the project root.**  
 
-```markdown
 # Pastebin Lite
 
 A simple Pastebin-like application that allows users to create text pastes and share a link to view them.  
