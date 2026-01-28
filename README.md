@@ -8,6 +8,33 @@ Pastes can optionally expire after a given time (TTL) or after a maximum number 
 This project was built as a take-home assignment.
 
 ---
+## Project Structure
+
+```plaintext
+pastebin-lite/
+├── app/
+│   ├── api/
+│   │   ├── healthz/
+│   │   │   └── route.ts           # Health check endpoint
+│   │   └── pastes/
+│   │       ├── route.ts           # POST /api/pastes
+│   │       └── [id]/
+│   │           └── route.ts       # GET /api/pastes/:id
+│   ├── p/
+│   │   └── [id]/
+│   │       └── page.tsx           # HTML view for a paste
+│   ├── globals.css                # Tailwind global styles
+│   ├── layout.tsx                 # Root layout
+│   └── page.tsx                   # Home page (create paste UI)
+├── lib/
+│   ├── redis.ts                   # Redis client configuration
+│   └── time.ts                    # TEST_MODE deterministic time helper
+├── .env.local                      # Environment variables (not committed)
+├── README.md                        # This file
+├── package.json                     # Node.js / Next.js dependencies
+├── tailwind.config.js               # Tailwind configuration
+└── postcss.config.js                # PostCSS configuration
+
 
 ## Features
 
