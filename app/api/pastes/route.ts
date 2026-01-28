@@ -6,9 +6,7 @@ import { nowMs } from "@/lib/time";
 export async function POST(req: Request) {
   let body: { content: string; ttl_seconds?: number; max_views?: number };
 
-  /* -----------------------------------
-     1️⃣ Parse JSON safely
-  ----------------------------------- */
+  
   try {
     body = await req.json();
   } catch {
@@ -19,9 +17,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    /* -----------------------------------
-       2️⃣ Extract & validate input
-    ----------------------------------- */
+   
     const { content, ttl_seconds, max_views } = body;
 
     if (typeof content !== "string" || !content.trim()) {
@@ -51,9 +47,7 @@ export async function POST(req: Request) {
       );
     }
 
-    /* -----------------------------------
-       3️⃣ Create paste object
-    ----------------------------------- */
+    
     const id = nanoid(8);
     const now = nowMs(req);
 
@@ -65,14 +59,11 @@ export async function POST(req: Request) {
       views: 0,
     };
 
-    /* -----------------------------------
-       4️⃣ Save to Redis
-    ----------------------------------- */
+    
     await redis.set(`paste:${id}`, paste);
 
-    /* -----------------------------------
-       5️⃣ Base URL from ENV (✅ correct way)
-    ----------------------------------- */
+ 
+
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
     if (!baseUrl) {
